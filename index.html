@@ -132,6 +132,18 @@
 .steps-voice{margin:0 0 10px 18px;font-size:14.5px;line-height:1.6;color:#453f60}
 .rec-lead{font-size:14px;color:#453f60;margin:0 0 10px}
 .ask3{font-size:14px;background:var(--cream);border:2px solid var(--ink);padding:12px 14px;margin:10px 0}
+.rec{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:2px solid var(--ink);background:var(--cream);padding:12px 14px}
+.rec-btn{font:inherit;font-weight:700;background:var(--coral);color:var(--ink);border:2px solid var(--ink);padding:10px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.rec-btn.recording{background:var(--yellow)}
+.rec-meta{display:grid;gap:2px;font-size:13px;color:#453f60}
+#recTimer{font-family:Fraunces,serif;font-size:20px}
+.rec-actions{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.rec-info{font-size:13px;color:var(--muted)}
+.rec-next{margin-top:14px;border-left:4px solid var(--yellow);padding-left:14px;font-size:14.5px;color:#453f60}
+.steps-voice{margin:8px 0 0 18px;line-height:1.6}
+.ask3{font-size:14px;background:var(--cream);border:2px solid var(--ink);padding:12px 14px;margin:10px 0}
+.rec-lead{font-size:14.5px;color:#453f60;margin:0}
+[hidden]{display:none !important}
 </style>
 </head>
 <body>
@@ -281,7 +293,7 @@
     <div class="sec-head">
       <span class="kicker">Apply</span>
       <h2>Cohort one application</h2>
-      <p>Two minutes of your own voice does more than a perfect essay. Record a short voice note answering: who you are, what is happening to your work, and what you would do with these skills. Send it as a link, or message it to the page after you submit.</p>
+      <p>Two minutes of your own voice does more than a perfect essay. Record it right here, download the file, upload it anywhere you like (Drive, Dropbox, or Messenger to yourself), then paste the link.</p>
     </div>
     <div class="forms">
       <form id="applyForm" novalidate>
@@ -297,19 +309,29 @@
         </div>
         <div class="field">
           <label>Your two-minute voice note</label>
-          <ol class="steps-voice">
-            <li>Tap the button below. It opens our Facebook page in Messenger.</li>
-            <li>Hold the microphone button and talk for up to two minutes.</li>
-            <li>Say your first name and your city, answer the three questions below, let go, and send.</li>
-          </ol>
-          <p class="rec-lead"><b>No app to install, no account, no permissions.</b> Your voice note arrives in our page inbox with your name on it.</p>
-          <div class="chat-actions">
-            <a class="btn" id="msgLink" href="#" hidden target="_blank" rel="noopener">Send a voice note on Messenger</a>
-            <a class="btn ghost" id="waLink" href="#" hidden target="_blank" rel="noopener">Or on WhatsApp</a>
+          <p class="rec-lead">Answer these three, in your own words:</p>
+          <p class="ask3">1. Who are you and what is your work now, or most recently?<br>2. What is happening to that work because of AI?<br>3. What would you do with these skills?</p>
+          <div class="rec" id="rec">
+            <button type="button" class="rec-btn" id="recBtn">● Record</button>
+            <div class="rec-meta"><span id="recTimer">0:00</span><span>Tap record, talk, then stop. Two minutes maximum.</span></div>
           </div>
-          <p class="ask3">Answer these three, in your own words:<br>1. Who are you and what is your work now, or most recently?<br>2. What is happening to that work because of AI?<br>3. What would you do with these skills?</p>
-          <small>Prefer a link? Paste it here and we will listen there instead.</small>
-          <input id="a-voice" name="voice_link" type="url" placeholder="https://… (Drive, Dropbox, Messenger link)" style="margin-top:6px">
+          <audio id="recPlayback" controls hidden style="width:100%;margin-top:10px"></audio>
+          <div class="rec-actions" id="recActions" hidden>
+            <button type="button" class="btn ghost small" id="recAgain">Record again</button>
+            <a class="btn small" id="recDownload" href="#" download="voice-note.webm">Download my recording</a>
+            <span id="recInfo" class="rec-info"></span>
+          </div>
+          <div class="rec-next" id="recNext" hidden>
+            <p><b>Then upload it and paste the link below.</b></p>
+            <ol class="steps-voice">
+              <li>Tap <b>Download my recording</b>. The file saves to your phone.</li>
+              <li>Upload it to Google Drive, Dropbox, or send it to yourself in Messenger.</li>
+              <li>Make the link viewable by anyone with the link, then paste it here.</li>
+            </ol>
+          </div>
+          <label for="a-voice" style="margin-top:12px;display:block">Link to your uploaded voice note</label>
+          <input id="a-voice" name="voice_link" type="url" placeholder="https://drive.google.com/…" required>
+          <small>If recording will not work on your phone, record a voice note in your phone app and upload that instead.</small>
         </div>
 
         <div class="field"><label for="a-note">Anything else? (optional)</label><textarea id="a-note" name="note" placeholder="Why you want this, what you have tried, what you are worried about."></textarea></div>
@@ -363,10 +385,49 @@
 const APPLY_WEBHOOK = "";
 const WAIT_WEBHOOK  = "";
 
+/* recorder: record, play back, download, paste the link */
+let recBlob=null, recMime="", recDur=0, mediaRec=null, chunks=[], tick=null, startedAt=0;
+const recBtn=document.getElementById("recBtn"), recTimer=document.getElementById("recTimer"),
+      playback=document.getElementById("recPlayback"), actions=document.getElementById("recActions"),
+      info=document.getElementById("recInfo"), next=document.getElementById("recNext"), dl=document.getElementById("recDownload");
+function pickMime(){ const c=["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg;codecs=opus"];
+  for(const m of c){ if(window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m; } return ""; }
+async function startRec(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recMime=pickMime();
+    mediaRec=recMime? new MediaRecorder(stream,{mimeType:recMime}) : new MediaRecorder(stream);
+    recMime=mediaRec.mimeType||recMime||"audio/webm";
+    chunks=[]; recBlob=null; recDur=0;
+    mediaRec.ondataavailable=ev=>{ if(ev.data&&ev.data.size) chunks.push(ev.data); };
+    mediaRec.onstop=()=>{
+      stream.getTracks().forEach(t=>t.stop());
+      recBlob=new Blob(chunks,{type:recMime});
+      playback.src=URL.createObjectURL(recBlob); playback.hidden=false;
+      actions.hidden=false; next.hidden=false;
+      const ext=recMime.includes("mp4")?"m4a":(recMime.includes("ogg")?"ogg":"webm");
+      dl.href=URL.createObjectURL(recBlob); dl.download="voice-note."+ext;
+      info.textContent=Math.round(recBlob.size/1024)+" KB · "+recDur+"s";
+      recBtn.textContent="● Record"; recBtn.classList.remove("recording");
+    };
+    mediaRec.start(); startedAt=Date.now();
+    recBtn.textContent="■ Stop"; recBtn.classList.add("recording");
+    tick=setInterval(()=>{ recDur=Math.round((Date.now()-startedAt)/1000);
+      recTimer.textContent=Math.floor(recDur/60)+":"+String(recDur%60).padStart(2,"0");
+      if(recDur>=120) stopRec(); },250);
+  }catch(err){
+    info.textContent="Microphone blocked. Use your phone's voice recorder app, upload it and paste the link below.";
+    actions.hidden=true; next.hidden=false;
+  }
+}
+function stopRec(){ if(mediaRec&&mediaRec.state!=="inactive") mediaRec.stop(); clearInterval(tick); recBtn.textContent="● Record"; recBtn.classList.remove("recording"); }
+recBtn.addEventListener("click",()=>{ mediaRec&&mediaRec.state==="recording"?stopRec():startRec(); });
+document.getElementById("recAgain").addEventListener("click",()=>{ playback.hidden=true; actions.hidden=true; next.hidden=true; recTimer.textContent="0:00"; info.textContent=""; recBlob=null; startRec(); });
+
 const MESSENGER_LINK = "";   // e.g. https://m.me/YourPageName
 const WHATSAPP_LINK  = "";   // e.g. https://wa.me/639XXXXXXXXX?text=Voice%20note%20for%20BPO%20AI%20Agent
-if (MESSENGER_LINK) { const a = document.getElementById("msgLink"); a.href = MESSENGER_LINK; a.hidden = false; }
-if (WHATSAPP_LINK)  { const a = document.getElementById("waLink");  a.href = WHATSAPP_LINK;  a.hidden = false; }
+if (MESSENGER_LINK) { const a = null; a.href = MESSENGER_LINK; a.hidden = false; }
+if (WHATSAPP_LINK)  { const a = null;  a.href = WHATSAPP_LINK;  a.hidden = false; }
 if (MESSENGER_LINK || WHATSAPP_LINK) { document.getElementById("chatBlock").hidden = false; }
 
 function setStatus(el, ok, msg){
@@ -379,10 +440,6 @@ async function post(url, payload){
   if(!r.ok) throw new Error("HTTP " + r.status);
   return {demo:false};
 }
-const MESSENGER_LINK = "";
-const WHATSAPP_LINK  = "";
-if (MESSENGER_LINK) { const a = document.getElementById("msgLink"); a.href = MESSENGER_LINK; a.hidden = false; }
-if (WHATSAPP_LINK)  { const a = document.getElementById("waLink");  a.href = WHATSAPP_LINK;  a.hidden = false; }
 
 document.getElementById("applyForm").addEventListener("submit", async e => {
   e.preventDefault();
