@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BPO AI Agent — free pilot: learn to build and run AI agents</title>
+<meta name="description" content="A free four-week pilot for Filipino call-centre agents and virtual assistants. Learn to build, test and supervise AI agents. Twenty seats. You were the agent. Now you run them.">
+<meta property="og:title" content="BPO AI Agent — free pilot cohort">
+<meta property="og:description" content="Four weeks, two evenings a week. Build a working AI agent, test it honestly, and leave with a demo employers can act on.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#7776BC; --lav:#CDC7E5; --cream:#FFFBDB; --yellow:#FFEC51; --coral:#FF674D;
+    --ink:#221d33; --muted:#5d5875; --line:#d9d2ef; --white:#fffef7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,.serif{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  .btn{display:inline-block;border:2px solid var(--ink);background:var(--coral);color:var(--ink);font-weight:700;font-size:16px;padding:14px 26px;text-decoration:none;border-radius:0;box-shadow:5px 5px 0 var(--ink);transition:transform .12s ease, box-shadow .12s ease;cursor:pointer}
+  .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--ink)}
+  .btn.ghost{background:var(--white);box-shadow:none}
+  .btn.ghost:hover{transform:none;background:var(--yellow)}
+  .btn.small{padding:10px 18px;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  header{position:sticky;top:0;z-index:30;background:rgba(255,251,219,.92);backdrop-filter:blur(8px);border-bottom:2px solid var(--ink)}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;max-width:1120px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-weight:600;font-size:20px;text-decoration:none}
+  .brand .dot{width:14px;height:14px;background:var(--coral);border:2px solid var(--ink);display:inline-block}
+  .hero{position:relative;overflow:hidden;padding:76px 0 54px}
+  .hero .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+  .kicker{display:inline-block;background:var(--yellow);border:2px solid var(--ink);padding:6px 12px;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  h1{font-size:clamp(40px,5.6vw,68px);margin:20px 0 18px}
+  h1 em{font-style:normal;color:var(--coral);text-decoration:underline;text-decoration-thickness:6px;text-decoration-color:var(--yellow);text-underline-offset:6px}
+  .lede{font-size:19px;color:#3c3752;max-width:56ch}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .hero-card{background:var(--purple);border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);padding:26px 24px;color:var(--white)}
+  .hero-card h3{color:var(--white);font-size:22px;margin-bottom:12px}
+  .hero-card ul{list-style:none;display:grid;gap:10px;font-size:15.5px}
+  .hero-card li{display:flex;gap:10px;align-items:flex-start}
+  .hero-card li b{color:var(--yellow)}
+  .strip{background:var(--lav);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:22px 0}
+  .strip .row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .strip b{font-family:Fraunces,serif;font-size:30px;display:block}
+  .strip span{font-size:13.5px;color:#403b58}
+  section{padding:64px 0}
+  .sec-head{max-width:70ch;margin-bottom:30px}
+  .sec-head h2{font-size:clamp(28px,3.4vw,40px);margin:10px 0 10px}
+  .sec-head p{color:var(--muted);font-size:17px}
+  .weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .week{background:var(--white);border:2px solid var(--ink);padding:22px 20px;display:flex;flex-direction:column;gap:8px}
+  .week .n{font-family:Fraunces,serif;font-size:15px;background:var(--yellow);border:2px solid var(--ink);align-self:flex-start;padding:2px 9px}
+  .week h3{font-size:19px}
+  .week p{font-size:14.5px;color:#453f60}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .panel{border:2px solid var(--ink);padding:26px 24px;background:var(--white)}
+  .panel.yes{background:var(--white)}
+  .panel.no{background:#fff4f0}
+  .panel h3{font-size:21px;margin-bottom:10px}
+  .panel ul{list-style:none;display:grid;gap:9px;font-size:15.5px}
+  .panel li::before{content:"→ ";font-weight:700;color:var(--purple)}
+  .panel.no li::before{content:"× ";color:var(--coral)}
+  .panel.pledge li::before{color:var(--yellow)}
+  .panel.pledge li{color:#f2eeff}
+  .offer{background:var(--purple);color:var(--white);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+  .offer .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+  .offer h2{color:var(--white);font-size:clamp(28px,3.6vw,44px)}
+  .offer p{color:#efeaff}
+  .price{margin-top:16px;display:flex;align-items:baseline;gap:14px}
+  .price b{font-family:Fraunces,serif;font-size:52px;color:var(--yellow)}
+  .price span{color:#efeaff;font-size:15px}
+  .pricebox{background:var(--white);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);padding:24px;color:var(--ink)}
+  .pricebox h3{font-size:19px;margin-bottom:10px}
+  .pricebox table{width:100%;border-collapse:collapse;font-size:14.5px}
+  .pricebox td{padding:8px 0;border-bottom:1px solid var(--line)}
+  .pricebox td:last-child{text-align:right;font-weight:600}
+  .pricebox .note{font-size:12.5px;color:var(--muted);margin-top:10px}
+  form{background:var(--white);border:2px solid var(--ink);padding:28px 26px;box-shadow:8px 8px 0 var(--ink)}
+  form h3{font-size:24px;margin-bottom:6px}
+  form .hint{font-size:14px;color:var(--muted);margin-bottom:18px}
+  .field{display:grid;gap:6px;margin-bottom:14px}
+  .field label{font-weight:600;font-size:14px}
+  .field input,.field select,.field textarea{font:inherit;padding:12px 12px;border:2px solid var(--ink);background:var(--cream);border-radius:0;width:100%}
+  .field textarea{min-height:96px;resize:vertical}
+  .field small{font-size:12.5px;color:var(--muted)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#453f60;margin:6px 0 16px}
+  .check input{width:18px;height:18px;margin-top:2px;accent-color:var(--coral)}
+  .forms{display:grid;grid-template-columns:1.3fr .7fr;gap:20px;align-items:start}
+  .status{margin-top:12px;font-size:14.5px;font-weight:600;display:none}
+  .status.ok{display:block;color:#1c6b45}
+  .status.err{display:block;color:#a3271b}
+  .faq{display:grid;gap:12px}
+  details{background:var(--white);border:2px solid var(--ink);padding:16px 18px}
+  summary{cursor:pointer;font-weight:700;font-size:16px}
+  details p{margin-top:8px;font-size:15px;color:#453f60}
+  footer{background:var(--ink);color:var(--lav);padding:40px 0 28px;font-size:14px}
+  footer .cols{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+  footer a{color:var(--yellow)}
+  footer .fine{font-size:12.5px;color:#a49fc0;margin-top:18px;max-width:90ch}
+  @media (max-width:900px){
+    .hero .grid,.split,.forms,.offer .grid{grid-template-columns:1fr}
+    .weeks{grid-template-columns:1fr 1fr}
+    .strip .row{grid-template-columns:1fr;gap:14px}
+    h1{font-size:clamp(34px,9vw,48px)}
+    .hero{padding:48px 0 40px}
+    section{padding:48px 0}
+    .btn{width:100%;text-align:center}
+    .hero-cta .btn{width:auto}
+  }
+  @media (max-width:560px){
+    .weeks{grid-template-columns:1fr}
+    .two{grid-template-columns:1fr}
+    .brand{font-size:17px}
+    .nav{padding:12px 18px}
+    .btn.small{width:auto}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="#top"><span class="dot"></span>BPO AI Agent</a>
+    <a class="btn small" href="#apply">Apply for the free pilot</a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <span class="kicker">Free pilot · 20 seats · Philippines</span>
+      <h1>You were the agent.<br>Now <em>you run them</em>.</h1>
+      <p class="lede">A free four-week pilot for call-centre agents and virtual assistants whose work is being changed by AI. Two evenings a week. You build a working AI agent, learn to test it honestly, and leave with a demo an employer can actually judge.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#apply">Apply for cohort one</a>
+        <a class="btn ghost" href="#waitlist">Just send me updates</a>
+      </div>
+    </div>
+    <aside class="hero-card">
+      <h3>What you leave with</h3>
+      <ul>
+        <li><b>1</b><span>One working AI agent, built by you, answering over your own knowledge base.</span></li>
+        <li><b>2</b><span>A runbook: escalation rules, testing, and what it costs to run.</span></li>
+        <li><b>3</b><span>A three-minute recorded demo and a portfolio link for job applications.</span></li>
+        <li><b>4</b><span>A certificate of completion, and honest results published after demo day.</span></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap row">
+    <div><b>−5.3%</b><span>Global call-centre employment below its 2023 peak, falling eight straight quarters. Revelio Labs via FT.</span></div>
+    <div><b>−10%</b><span>Hiring demand in AI-exposed roles across Asia since 2022. IMF, October 2026.</span></div>
+    <div><b>2×</b><span>Demand for AI skills in those same exposed jobs. That gap is the job.</span></div>
+  </div>
+</div>
+
+<section id="course">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker" style="background:var(--lav)">The four weeks</span>
+      <h2>Learn the job that is growing, not the one that is shrinking</h2>
+      <p>Two sessions a week, 7pm to 9pm Manila time, Tuesday and Thursday. Recorded. Laptop required. Everything taught is free and local-first, so nothing you build depends on a paid subscription.</p>
+    </div>
+    <div class="weeks">
+      <div class="week"><span class="n">Week 1</span><h3>What an agent is</h3><p>Models, tokens and context in plain words. Instructions that hold, tone in Taglish and English, and your first agent answering your own ten questions.</p></div>
+      <div class="week"><span class="n">Week 2</span><h3>Build it properly</h3><p>Knowledge bases, tools and guardrails. The agent learns to say “I don't know”, hand over to a human, and refuse what it must refuse.</p></div>
+      <div class="week"><span class="n">Week 3</span><h3>Prove it</h3><p>Turn twenty real transcripts into a test set. Score it honestly. Red-team day: attack each other's agents, then write a one-page test report.</p></div>
+      <div class="week"><span class="n">Week 4</span><h3>Operate it</h3><p>Monitoring, incident playbooks, cost per conversation, warm handoffs. Demo day in front of invited employers, with your runbook and report.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="who" style="background:var(--white);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Straight talk</span>
+      <h2>Who this is for, and what it is not</h2>
+      <p>The fastest way to lose trust is to look like a recruitment scheme. So here is the plain version.</p>
+    </div>
+    <div class="split">
+      <div class="panel yes">
+        <h3>This is for you if</h3>
+        <ul>
+          <li>You are or were a call-centre agent, team lead, or virtual assistant.</li>
+          <li>Your work is being automated, or you can see it coming.</li>
+          <li>You have a laptop and stable internet for two evenings a week.</li>
+          <li>You want evidence you can show an employer, not another certificate PDF.</li>
+          <li>You can commit to six of eight sessions and demo day.</li>
+        </ul>
+      </div>
+      <div class="panel no">
+        <h3>This is not</h3>
+        <ul>
+          <li>A job guarantee. Nobody can promise that honestly.</li>
+          <li>Government accredited, or affiliated with TESDA or IBPAP. Not yet, and we will say so if it changes.</li>
+          <li>A recruitment agency. No fees, no bank details, no placement commissions.</li>
+          <li>A get-rich course. No lambos, no “10x”, no upsell.</li>
+          <li>A place to share anyone's private customer data. Ever.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="offer" id="cohort">
+  <div class="wrap grid">
+    <div>
+      <span class="kicker" style="background:var(--yellow)">Cohort one</span>
+      <h2>Free. Twenty seats. Application required.</h2>
+      <p>You do not pay anything. In return I ask for attendance, honesty in the feedback, and permission to publish what worked and what failed, without your name unless you say yes.</p>
+      <div class="price"><b>₱0</b><span>for cohort one, all four weeks, including demo day</span></div>
+    </div>
+    <div class="pricebox">
+      <h3>After the pilot (indicative)</h3>
+      <table>
+        <tr><td>Self-paced course</td><td>₱1,500</td></tr>
+        <tr><td>Live cohort</td><td>₱3,500</td></tr>
+        <tr><td>Employer-sponsored seat</td><td>₱8,000</td></tr>
+      </table>
+      <p class="note">Indicative only, not open for booking. Final prices follow the pilot results. One seat in three is reserved for someone who lost work in the last twelve months.</p>
+    </div>
+  </div>
+</section>
+
+<section id="where-the-money-goes" style="background:var(--lav);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker" style="background:var(--yellow)">Where the money goes</span>
+      <h2>Every peso of profit goes to Autism Works</h2>
+      <p>The paid cohorts fund the free ones, and anything left over is donated to the <b>Autism Society Philippines</b> for their <b>Autism Works</b> programme, which has been placing autistic Filipinos into retail, food service and BPO jobs since 2016.</p>
+    </div>
+    <div class="split">
+      <div class="panel" style="background:var(--white)">
+        <h3>Why this charity</h3>
+        <ul style="list-style:none;display:grid;gap:9px;font-size:15.5px">
+          <li>Autism Works is an employment programme, not a awareness campaign. It gets people hired.</li>
+          <li>It already places people into BPO roles, the same industry this course serves. The loop closes.</li>
+          <li>Autistic adults are among the most overlooked in Filipino hiring, and agent supervision is work that suits many of them well: pattern, precision, patience.</li>
+          <li>ASP is a national organisation with chapters from Luzon to Mindanao, so the money does not stop in Metro Manila.</li>
+        </ul>
+      </div>
+      <div class="panel pledge" style="background:var(--purple);color:var(--white);border-color:var(--ink)">
+        <h3 style="color:var(--white)">The pledge, in writing</h3>
+        <ul style="list-style:none;display:grid;gap:9px;font-size:15.5px">
+          <li style="color:#f2eeff">100% of surplus, after direct costs (hosting, tools, materials), is donated.</li>
+          <li style="color:#f2eeff">Direct costs are published with each donation: what came in, what went out, what was given.</li>
+          <li style="color:#f2eeff">Donations are made in the charity's name with the reference published, so anyone can check.</li>
+          <li style="color:#f2eeff">If the pilot never makes a profit, that is fine. Cohort one is free and stays free.</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:20px;font-size:13px;color:#453f60;max-width:80ch">Donation pledged, not an endorsement. Autism Society Philippines has not reviewed this course and its name is used only to name the recipient. Contact details: Autism Society Philippines, Quezon City, +63 2 903 5496, autismsocietyphilippines.org.</p>
+  </div>
+</section>
+
+<section id="apply">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Apply</span>
+      <h2>Cohort one application</h2>
+      <p>Two minutes of your own voice does more than a perfect essay. Record a short voice note answering: who you are, what is happening to your work, and what you would do with these skills. Send it as a link, or message it to the page after you submit.</p>
+    </div>
+    <div class="forms">
+      <form id="applyForm" novalidate>
+        <h3>Application</h3>
+        <p class="hint">All fields except the written note are required.</p>
+        <div class="two">
+          <div class="field"><label for="a-name">First name</label><input id="a-name" name="first_name" autocomplete="given-name" required></div>
+          <div class="field"><label for="a-email">Email</label><input id="a-email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="a-city">City</label><input id="a-city" name="city" placeholder="Cebu, Manila, Davao…" required></div>
+          <div class="field"><label for="a-role">Current or last role</label><input id="a-role" name="role" placeholder="Agent, team lead, VA…" required></div>
+        </div>
+        <div class="field"><label for="a-voice">Link to your two-minute voice note</label><input id="a-voice" name="voice_link" type="url" placeholder="https://… (Drive, Dropbox, Messenger link)" required><small>Phone voice memo uploaded anywhere and shared is fine.</small></div>
+        <div class="field"><label for="a-note">Anything else? (optional)</label><textarea id="a-note" name="note" placeholder="Why you want this, what you have tried, what you are worried about."></textarea></div>
+        <label class="check"><input type="checkbox" name="consent" required><span>I understand this is a free pilot, not a job guarantee, and that my details are used only to contact me about the cohort.</span></label>
+        <button class="btn" type="submit">Send application</button>
+        <div class="status" id="applyStatus" role="status"></div>
+      </form>
+
+      <form id="waitForm" novalidate>
+        <h3>Join the waitlist</h3>
+        <p class="hint">Not ready to apply? Get one useful email a week and first refusal when cohort two opens.</p>
+        <div class="field"><label for="w-name">First name</label><input id="w-name" name="first_name" autocomplete="given-name" required></div>
+        <div class="field"><label for="w-email">Email</label><input id="w-email" name="email" type="email" autocomplete="email" required></div>
+        <button class="btn ghost" type="submit">Keep me posted</button>
+        <div class="status" id="waitStatus" role="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="background:var(--white);border-top:2px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker" style="background:var(--lav)">Questions</span>
+      <h2>The honest FAQ</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Is it really free?</summary><p>Yes. Cohort one costs nothing. There is no card field on this page, no deposit, and no upsell at the end.</p></details>
+      <details><summary>Do I need to code?</summary><p>No. You will write instructions and connect tools, which is closer to writing a good SOP than programming. If you can write a clear escalation policy, you can do this.</p></details>
+      <details><summary>Will this get me a job?</summary><p>No guarantee. What it gives you is a working agent, a recorded demo, and a runbook, which is what a hiring manager can actually assess. Employers are being invited to demo day.</p></details>
+      <details><summary>Why are you doing this free?</summary><p>Because I want to learn what the market genuinely needs before charging anyone for it, and because I have family here. The pilot results, including the failures, get published.</p></details>
+      <details><summary>What do you do with my data?</summary><p>Contact you about the cohort, run the pilot, and publish aggregate results. No names, no voice notes, and no contact details in public without your written permission.</p></details>
+      <details><summary>What do I need?</summary><p>A laptop, stable internet, two evenings a week for four weeks, and a willingness to test your own work honestly.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap cols">
+    <div><strong class="serif" style="font-size:19px;color:var(--cream)">BPO AI Agent</strong><div style="margin-top:6px">A pilot for Filipino agents and VAs.</div></div>
+    <div>Contact: through the Facebook page, or reply to any email from the pilot.</div>
+  </div>
+  <div class="wrap fine">Cohort one is a free, unaccredited pilot. Not affiliated with TESDA, IBPAP, or any employer. No fees are collected on this page. Figures quoted come from Revelio Labs via the Financial Times and the IMF, October 2026.</div>
+</footer>
+
+<script>
+/* ── ActivePieces webhooks ─────────────────────────────────────────────
+   Paste the two webhook URLs here when the flows are built.
+   Until then the forms demo locally and tell the visitor plainly.       */
+const APPLY_WEBHOOK = "";
+const WAIT_WEBHOOK  = "";
+
+function setStatus(el, ok, msg){
+  el.className = "status " + (ok ? "ok" : "err");
+  el.textContent = msg;
+}
+async function post(url, payload){
+  if(!url) return {demo:true};
+  const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)});
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  return {demo:false};
+}
+document.getElementById("applyForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, st = document.getElementById("applyStatus");
+  if(!f.reportValidity()) return;
+  const data = Object.fromEntries(new FormData(f).entries());
+  data.source = "bpoaiagent-apply";
+  data.submitted_at = new Date().toISOString();
+  try{
+    const r = await post(APPLY_WEBHOOK, data);
+    if(r.demo){
+      localStorage.setItem("bpoai_apply_demo", JSON.stringify(data));
+      setStatus(st, true, "Saved. Applications open shortly, join the waitlist and you will be first to know.");
+    } else {
+      setStatus(st, true, "Application received. Check your email, and send your voice note if you have not already.");
+      f.reset();
+    }
+  }catch(err){ setStatus(st, false, "Something went wrong: " + err.message + ". Please try again."); }
+});
+document.getElementById("waitForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, st = document.getElementById("waitStatus");
+  if(!f.reportValidity()) return;
+  const data = Object.fromEntries(new FormData(f).entries());
+  data.source = "bpoaiagent-waitlist";
+  data.submitted_at = new Date().toISOString();
+  try{
+    const r = await post(WAIT_WEBHOOK, data);
+    if(r.demo){
+      localStorage.setItem("bpoai_wait_demo", JSON.stringify(data));
+      setStatus(st, true, "Saved locally. The list opens as soon as the page is connected, watch this space.");
+    } else {
+      setStatus(st, true, "You are on the list. One email a week, nothing else.");
+      f.reset();
+    }
+  }catch(err){ setStatus(st, false, "Something went wrong: " + err.message + ". Please try again."); }
+});
+</script>
+</body>
+</html>
