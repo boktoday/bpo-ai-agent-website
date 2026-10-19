@@ -135,6 +135,10 @@
 #recTimer{font-family:Fraunces,serif;font-size:20px}
 .rec-actions{display:flex;gap:12px;align-items:center;margin-top:10px}
 .rec-info{font-size:13px;color:var(--muted)}
+.rec-lead{font-size:14px;color:#453f60;margin:0 0 10px}
+.chat-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.rec-or{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+[hidden]{display:none !important}
 </style>
 </head>
 <body>
@@ -300,6 +304,14 @@
         </div>
         <div class="field">
           <label>Your two-minute voice note</label>
+<div id="chatBlock" hidden>
+          <p class="rec-lead">Easiest way: send it as a voice note in Messenger. Say your first name and your city, answer the three questions, done. <b>No app to install, no account, works on any phone.</b></p>
+          <div class="chat-actions">
+            <a class="btn" id="msgLink" href="#" hidden target="_blank" rel="noopener">Send a voice note on Messenger</a>
+            <a class="btn ghost" id="waLink" href="#" hidden target="_blank" rel="noopener">Or on WhatsApp</a>
+          </div>
+          <p class="rec-or">or record it right here</p>
+          </div>
           <div class="rec" id="rec">
             <button type="button" class="rec-btn" id="recBtn" aria-label="Start recording">● Record</button>
             <div class="rec-meta"><span id="recTimer">0:00</span><span id="recHint">Tap record, answer the three questions, stop. Two minutes maximum.</span></div>
@@ -362,6 +374,12 @@
    Until then the forms demo locally and tell the visitor plainly.       */
 const APPLY_WEBHOOK = "";
 const WAIT_WEBHOOK  = "";
+
+const MESSENGER_LINK = "";   // e.g. https://m.me/YourPageName
+const WHATSAPP_LINK  = "";   // e.g. https://wa.me/639XXXXXXXXX?text=Voice%20note%20for%20BPO%20AI%20Agent
+if (MESSENGER_LINK) { const a = document.getElementById("msgLink"); a.href = MESSENGER_LINK; a.hidden = false; }
+if (WHATSAPP_LINK)  { const a = document.getElementById("waLink");  a.href = WHATSAPP_LINK;  a.hidden = false; }
+if (MESSENGER_LINK || WHATSAPP_LINK) { document.getElementById("chatBlock").hidden = false; }
 
 function setStatus(el, ok, msg){
   el.className = "status " + (ok ? "ok" : "err");
