@@ -2,8 +2,8 @@
 
 The landing page for **BPO Agent Skills**, a free four-week pilot teaching Filipino call-centre agents and virtual assistants to build, test and supervise AI agents.
 
-- Live: https://boktoday.github.io/bpo-ai-agent-website/
-- Domain: bpoagentskills.com (to be pointed at Vercel)
+- Live: **https://bpoagentskills.com/** (Vercel, apex canonical; www redirects)
+- Mirror: https://boktoday.github.io/bpo-ai-agent-website/
 - Curriculum and marketing plan: Google Doc, linked from the pilot owner
 
 ## What is here
