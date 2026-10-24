@@ -434,8 +434,8 @@ section[id]{scroll-margin-top:84px}
 /* ── ActivePieces webhooks ─────────────────────────────────────────────
    Paste the two webhook URLs here when the flows are built.
    Until then the forms demo locally and tell the visitor plainly.       */
-const APPLY_WEBHOOK = "";
-const WAIT_WEBHOOK  = "";
+const APPLY_WEBHOOK = "/api/apply";
+const WAIT_WEBHOOK  = "/api/wait";
 
 /* recorder: record, play back, download, paste the link */
 let recBlob=null, recMime="", recDur=0, mediaRec=null, chunks=[], tick=null, startedAt=0;
